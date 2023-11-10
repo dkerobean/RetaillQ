@@ -4,6 +4,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import Group
 from .models import CustomUser
 
+
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
     list_display = ('email', 'is_staff', 'is_active',)
@@ -15,8 +16,8 @@ class CustomUserAdmin(UserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2', 'is_staff', 'is_active')}
-        ),
+            'fields': ('email', 'password1', 'password2', 'is_staff', 'is_active')} # noqa
+        ), # noqa
     )
     search_fields = ('email',)
     ordering = ('email',)
