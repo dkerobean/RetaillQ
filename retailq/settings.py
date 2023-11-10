@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'retailq.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'retailq',
+        'NAME': 'retaillq',
         'USER': 'postgres',
         'PASSWORD': 'frogman28',
         'HOST': 'localhost',
