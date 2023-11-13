@@ -8,7 +8,8 @@ def create_profile(sender, instance, created, **kwargs):
     if created:
         user = instance
         user_profile = Profile.objects.create( # noqa
-            user=user
+            user=user,
+            display_name=user.organization_name
         )
 
 

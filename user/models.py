@@ -37,18 +37,18 @@ class Profile(models.Model):
     last_name = models.CharField(max_length=50)
     display_name = models.CharField(max_length=150)
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
-    organization_name = models.CharField(max_length=50)
     organization_id = models.IntegerField(default=generate_organization_id)
-    country = models.CharField(max_length=100)
     mobile_number = models.CharField(max_length=20)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.user
+        return self.display_name
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
+    organization_name = models.CharField(max_length=50)
     email = models.EmailField(unique=True)
+    country = models.CharField(max_length=100)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     profile = models.OneToOneField(Profile, on_delete=models.CASCADE,
