@@ -20,6 +20,7 @@ class RegisterationView(generics.CreateAPIView):
         """
         Create a new user and set the password using the serializer.
         """
+
         user = serializer.save()
         user.set_password(serializer.validated_data['password'])
         user.save()

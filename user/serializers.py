@@ -3,18 +3,21 @@ from .models import CustomUser
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
+    confirm_password = serializers.CharField(write_only=True, required=True)
     class Meta:
         model = CustomUser
-        fields = ['email', 'password']
+        fields = ['email', 'password', 'confirm_password']
         extra_kwargs = {'password': {'write_only': True}}
 
         def validate(self, data):
-            """ Validate the password and password confirmation fields match """
+            """
+            Validate the password and password confirmation fields match
+            """
 
             password = data.get('password')
-            password_confirmation = data.get('password_confirmation')
+            confirm_password = data.get('confirm_password')
 
-            if password and password_confirmation and password != password_confirmation:
+            if password and confirm_password and password != confirm_password:
                 raise serializers.ValidationError("Passwords do not match.")
 
             return data
