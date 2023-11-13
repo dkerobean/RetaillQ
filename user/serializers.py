@@ -3,10 +3,11 @@ from .models import CustomUser
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
-    confirm_password = serializers.CharField(write_only=True, required=True)
+    # confirm_password = serializers.CharField(write_only=True, required=True)
+
     class Meta:
         model = CustomUser
-        fields = ['email', 'password', 'confirm_password']
+        fields = ['email', 'password']
         extra_kwargs = {'password': {'write_only': True}}
 
         def validate(self, data):

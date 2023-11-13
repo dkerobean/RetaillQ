@@ -29,8 +29,10 @@ class CustomUserManager(BaseUserManager):
 
 
 class Profile(models.Model):
-    user = models.OneToOneField('CustomUser', on_delete=models.CASCADE, related_name='profiles')
-    profile_id = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
+    user = models.OneToOneField('CustomUser', on_delete=models.CASCADE,
+                                related_name='profiles')
+    profile_id = models.UUIDField(default=uuid.uuid4, unique=True,
+                                  editable=False)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     display_name = models.CharField(max_length=150)
@@ -49,7 +51,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
-    profile = models.OneToOneField(Profile, on_delete=models.CASCADE, null=True, blank=True, related_name='user_profile')
+    profile = models.OneToOneField(Profile, on_delete=models.CASCADE,
+                                   null=True, blank=True,
+                                   related_name='user_profile')
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
