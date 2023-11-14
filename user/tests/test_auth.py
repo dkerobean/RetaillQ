@@ -3,7 +3,7 @@ from rest_framework.test import APIClient
 from rest_framework import status
 from django.urls import reverse
 from user.models import CustomUser
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.tokens import RefreshToken  # noqa
 
 
 class UserRegistrationLoginTest(TestCase):

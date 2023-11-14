@@ -62,3 +62,13 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+
+class Transaction(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    transaction_type = models.CharField(max_length=10,
+                                        choices=[('income', 'Income'),
+                                                 ('expense', 'Expense')])
+    description = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
