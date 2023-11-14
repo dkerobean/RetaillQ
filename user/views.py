@@ -5,7 +5,7 @@ from .serializers import UserRegistrationSerializer
 from rest_framework import status
 
 
-class RegisterationView(generics.CreateAPIView):
+class RegistrationView(generics.CreateAPIView):
 
     serializer_class = UserRegistrationSerializer
 

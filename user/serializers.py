@@ -27,7 +27,9 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             """ Create a new user """
 
             user = CustomUser.objects.create(
+                organization_name=validated_data['organization_name'],
                 email=validated_data['email'],
-                password=validated_data['password']
+                password=validated_data['password'],
+                country=validated_data['country']
             )
             return user
