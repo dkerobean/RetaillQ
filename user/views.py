@@ -1,8 +1,9 @@
 
 from rest_framework import generics
 from rest_framework.response import Response
-from .serializers import UserRegistrationSerializer
+from .serializers import UserRegistrationSerializer, TrasactionSerializer
 from rest_framework import status
+from .models import Transaction
 
 
 class RegistrationView(generics.CreateAPIView):
@@ -25,3 +26,9 @@ class RegistrationView(generics.CreateAPIView):
         user = serializer.save()
         user.set_password(serializer.validated_data['password'])
         user.save()
+
+
+class TransactionView(generics.ListAPIView):
+
+    queryset = Transaction.objects.all
+    serializer_class = TrasactionSerializer

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CustomUser
+from .models import CustomUser, Transaction
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -33,3 +33,10 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
                 country=validated_data['country']
             )
             return user
+
+
+class TrasactionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Transaction
+        fields = '__all__'
