@@ -30,5 +30,5 @@ class RegistrationView(generics.CreateAPIView):
 
 class TransactionView(generics.ListAPIView):
 
-    queryset = Transaction.objects.all
+    queryset = Transaction.objects.all()
     serializer_class = TrasactionSerializer
