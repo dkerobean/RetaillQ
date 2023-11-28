@@ -36,7 +36,7 @@ class UserProfileView(APIView):
 
     def get(self, request):
         # Retrieve the user profile for the authenticated user
-        profile = request.user.profile
+        profile = request.user.profiles
         serializer = UserProfileSerializer(profile)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
