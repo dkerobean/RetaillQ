@@ -1,9 +1,12 @@
 
 from rest_framework import generics
 from rest_framework.response import Response
-from .serializers import UserRegistrationSerializer, TrasactionSerializer
+from .serializers import (UserRegistrationSerializer,
+                          TrasactionSerializer, UserProfileSerializer)
 from rest_framework import status
 from .models import Transaction
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 
 
 class RegistrationView(generics.CreateAPIView):
@@ -26,6 +29,16 @@ class RegistrationView(generics.CreateAPIView):
         user = serializer.save()
         user.set_password(serializer.validated_data['password'])
         user.save()
+
+
+class UserProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        # Retrieve the user profile for the authenticated user
+        profile = request.user.profile
+        serializer = UserProfileSerializer(profile)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class TransactionView(generics.ListAPIView):
