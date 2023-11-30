@@ -49,8 +49,12 @@ class UserProfileView(APIView):
 
         serializer = UserProfileSerializer(profile, data=request.data)
         if serializer.is_valid():
+            # handle image upload
+            if 'avatar' in request.FILES:
+                profile.avatar = request.FILES['avatar']
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
+        print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

@@ -33,12 +33,13 @@ class Profile(models.Model):
                                 related_name='profiles')
     profile_id = models.UUIDField(default=uuid.uuid4, unique=True,
                                   editable=False)
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50)
     display_name = models.CharField(max_length=150)
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
     organization_id = models.IntegerField(default=generate_organization_id)
     mobile_number = models.CharField(max_length=20)
+    address = models.CharField(max_length=70, null=True, blank=True)
+    business_type = models.CharField(max_length=70, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
