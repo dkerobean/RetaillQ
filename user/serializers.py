@@ -46,4 +46,4 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = fields = ['name', 'display_name', 'avatar', 'mobile_number', 'address', 'business_type']
+        fields = fields = ['name', 'display_name', 'avatar', 'mobile_number', 'address', 'business_type'] # noqa

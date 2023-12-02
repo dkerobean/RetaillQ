@@ -44,7 +44,7 @@ class UserProfileView(APIView):
         profile = request.user.profiles
 
         if request.user != profile.user:
-            return Response({"detail": "You do not have permission to perform this action."},
+            return Response({"detail": "You do not have permission to perform this action."}, # noqa
                             status=status.HTTP_403_FORBIDDEN)
 
         serializer = UserProfileSerializer(profile, data=request.data)
@@ -65,9 +65,9 @@ class LogoutView(APIView):
             refresh_token = request.data["refresh_token"]
             token = RefreshToken(refresh_token)
             token.blacklist()
-            return Response({"detail": "Logout successful."}, status=status.HTTP_200_OK)
-        except Exception as e:
-            return Response({"detail": "Invalid refresh token."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"detail": "Logout successful."}, status=status.HTTP_200_OK) # noqa
+        except Exception as e: # noqa
+            return Response({"detail": "Invalid refresh token."}, status=status.HTTP_400_BAD_REQUEST) # noqa
 
 
 class TransactionView(generics.ListAPIView):
