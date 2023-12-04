@@ -1,4 +1,3 @@
-from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -28,7 +27,7 @@ class ProductTestCase(APITestCase):
         }
         self.products = Products.objects.create(**self.product_data)
 
-        self.url = reverse('product', kwargs={'pk': self.product.id})
+        self.url = reverse('product-detail', kwargs={'pk': self.product.id}).as_view()
 
     def test_create_product(self):
         new_product_data = {
@@ -38,7 +37,7 @@ class ProductTestCase(APITestCase):
             'quantity': 1,
         }
 
-        response = self.client.post(reverse('products'), new_product_data, format="json")
+        response = self.client.post(reverse('products'), new_product_data, format="json")  # noqa
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Products.objects.count(), 2)
@@ -58,7 +57,7 @@ class ProductTestCase(APITestCase):
             'price': 25.99,
         }
 
-        response = self.client.put(self.url, updated_product_data, format="json")
+        response = self.client.put(self.url, updated_product_data, format="json") # noqa
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.product.refresh_from_db()
