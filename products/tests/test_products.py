@@ -25,9 +25,9 @@ class ProductTestCase(APITestCase):
             'price': '12.99',
             'quantity': 1,
         }
-        self.products = Products.objects.create(**self.product_data)
+        self.product = Products.objects.create(**self.product_data)
 
-        self.url = reverse('product-detail', kwargs={'pk': self.product.id}).as_view()
+        self.url = reverse('product-detail', kwargs={'pk': self.product.id}).as_view() # noqa
 
     def test_create_product(self):
         new_product_data = {
