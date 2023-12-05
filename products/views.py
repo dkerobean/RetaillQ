@@ -4,15 +4,17 @@ from user.models import Products
 from .serializers import ProductsSerializer
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+from django.shortcuts import get_object_or_404
 
 
 class ProductsView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        products = Products.objects.all()
+        products = Products.objects.filter(user=request.user)
         serializer = ProductsSerializer(products, many=True)
-        return Response(serializer.data)
+        # handdle case where  products is empty
+        return Response(serializer.data if products else [], status=status.HTTP_200_OK) # noqa
 
     def post(self, request):
 
@@ -26,13 +28,7 @@ class ProductsView(APIView):
 
     def put(self, request, pk):
 
-        permission_classes = [IsAuthenticated] # noqa
-
-        product = Products.objects.get(id=pk)
-
-        if request.user != product.user:
-            return Response({'error': 'You are not authorized to take this action'}, status=status.HTTP_403_FORBIDDEN) # noqa
-
+        product = get_object_or_404(Products, id=pk, user=request.user)
         serializer = ProductsSerializer(product, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -41,8 +37,6 @@ class ProductsView(APIView):
 
     def delete(self, request, pk):
 
-        permission_classes = [IsAuthenticated] # noqa
-
-        product = Products.objects.get(id=pk)
+        product = get_object_or_404(Products, id=pk, user=request.user)
         product.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

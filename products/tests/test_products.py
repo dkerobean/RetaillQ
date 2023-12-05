@@ -20,14 +20,14 @@ class ProductTestCase(APITestCase):
 
         # create a product for testing
         self.product_data = {
-            'user': self.user.id,
+            'user': self.user,
             'name': 'Test Product',
             'price': '12.99',
             'quantity': 1,
         }
         self.product = Products.objects.create(**self.product_data)
 
-        self.url = reverse('product-detail', kwargs={'pk': self.product.id}).as_view() # noqa
+        self.url = reverse('product-detail', kwargs={'pk': self.product.id}) # noqa
 
     def test_create_product(self):
         new_product_data = {
@@ -37,27 +37,28 @@ class ProductTestCase(APITestCase):
             'quantity': 1,
         }
 
-        response = self.client.post(reverse('products'), new_product_data, format="json")  # noqa
+        response = self.client.post(reverse('products'), new_product_data, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Products.objects.count(), 2)
 
     def test_retrieve_product(self):
 
-        response = self.client.get(self.url)
+        response = self.client.get(reverse('products'))
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['name'], 'Test Product')
+        self.assertEqual(response.data[0]['name'], 'Test Product')
+
 
     def test_update_product(self):
-
         updated_product_data = {
+            'user': self.user.id,
             'name': 'Updated Product',
             'quantity': 15,
             'price': 25.99,
         }
 
-        response = self.client.put(self.url, updated_product_data, format="json") # noqa
+        response = self.client.put(self.url, updated_product_data)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.product.refresh_from_db()
