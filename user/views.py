@@ -8,6 +8,32 @@ from .models import Transaction
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.views import TokenObtainPairView
+from django.conf import settings
+import jwt
+
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        if response.status_code == status.HTTP_200_OK:
+            token = response.data.get('access')
+            if token:
+                user_id = self.extract_user_id_from_token(token)
+                response.data['user_id'] = user_id
+        return response
+
+    def extract_user_id_from_token(self, token):
+        try:
+            decoded_payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+            return decoded_payload.get('user_id')
+        except jwt.ExpiredSignatureError:
+            return None, 'Token has expired.'
+            pass
+        except jwt.InvalidTokenError:
+            return None, 'Token has expired.'
+            pass
+        return None
 
 
 class RegistrationView(generics.CreateAPIView):
