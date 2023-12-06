@@ -40,3 +40,23 @@ class ProductsView(APIView):
         product = get_object_or_404(Products, id=pk, user=request.user)
         product.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ProductView(APIView):
+
+    permission_classes = [IsAuthenticated]  # noqa
+
+    def get(self, request, pk):
+        try:
+            product = Products.objects.get(id=pk, user=request.user)
+            serializer = ProductsSerializer(product)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Products.DoesNotExist:
+            return Response(
+                {"error": f"Product with id {pk} not found."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+
+
+
