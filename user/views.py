@@ -25,7 +25,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 
     def extract_user_id_from_token(self, token):
         try:
-            decoded_payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+            decoded_payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256']) # noqa
             return decoded_payload.get('user_id')
         except jwt.ExpiredSignatureError:
             return None, 'Token has expired.'
