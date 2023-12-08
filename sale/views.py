@@ -34,3 +34,30 @@ class SalesView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request, pk):
+        sale = get_object_or_404(Sale, id=pk, user=request.user)
+        serializer = SaleSerializer(sale, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class SaleView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
+        try:
+            sale = Sale.objects.get(id=pk, user=request.user)
+            serializer = SaleSerializer(sale)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Sale.DoesNotExist:
+            return Response(
+                {"error": f"Product with id {pk} not found."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+
+
