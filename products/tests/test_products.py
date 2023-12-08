@@ -37,7 +37,7 @@ class ProductTestCase(APITestCase):
             'quantity': 1,
         }
 
-        response = self.client.post(reverse('products'), new_product_data, format="json")
+        response = self.client.post(reverse('products'), new_product_data, format="json") # noqa
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Products.objects.count(), 2)
@@ -48,7 +48,6 @@ class ProductTestCase(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data[0]['name'], 'Test Product')
-
 
     def test_update_product(self):
         updated_product_data = {
