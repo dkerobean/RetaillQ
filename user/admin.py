@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import Group
-from .models import CustomUser, Profile, Transaction, Products
+from .models import CustomUser, Profile, Transaction, Products, Sale, Sale
 
 
 class CustomUserAdmin(UserAdmin):
@@ -28,3 +28,4 @@ admin.site.unregister(Group)
 admin.site.register(Profile)
 admin.site.register(Transaction)
 admin.site.register(Products)
+admin.site.register(Sale)

@@ -70,9 +70,18 @@ class Products(models.Model):
     product_id = models.IntegerField(default=generate_product_id)
     name = models.CharField(max_length=75)
     quantity = models.IntegerField()
+    initial_quantity = models.IntegerField(null=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    remaining_percentage = models.DecimalField(max_digits=5, decimal_places=2, default=100.00)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        # Set initial_quantity when creating a new product
+        if not self.pk:
+            self.initial_quantity = self.quantity
+
+        super(Products, self).save(*args, **kwargs)
 
 
 class Sale(models.Model):
@@ -81,6 +90,19 @@ class Sale(models.Model):
     quantity_sold = models.PositiveIntegerField()
     sale_date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        # Deduct quantity_sold from the product quantity
+        self.product.quantity -= self.quantity_sold
+
+        # Calculate the remaining  percentage
+        remaining_percentage = (self.product.quantity / self.product.initial_quantity) * 100
+        self.product.remaining_percentage = remaining_percentage
+
+        self.product.save()
+
+        # Call the original save method to save the Sale instance
+        super(Sale, self).save(*args, **kwargs)
 
 
 class Transaction(models.Model):

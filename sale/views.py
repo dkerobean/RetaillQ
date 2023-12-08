@@ -1,3 +1,36 @@
-from django.shortcuts import render
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from user.models import CustomUser, Sale, Products
+from .serializers import SaleSerializer
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from django.shortcuts import get_object_or_404
 
-# Create your views here.
+
+class SalesView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        sales = Sale.objects.filter(user=request.user)
+        serializer = SaleSerializer(sales, many=True)
+        return Response(serializer.data if sales else [], status=status.HTTP_200_OK)
+
+    def post(self, request):
+        # Ensure the selected product belongs to the current user
+        product_id = request.data.get('product')
+        product = get_object_or_404(Products, id=product_id, user=request.user)
+
+        serializer = SaleSerializer(data=request.data)
+        if serializer.is_valid():
+            # Set the product before saving the Sale instance
+            serializer.validated_data['product'] = product
+
+            # Ensure that the quantity_sold is less than or equal to the available quantity
+            quantity_sold = serializer.validated_data['quantity_sold']
+            if quantity_sold > product.quantity:
+                return Response({'error': 'Quantity sold exceeds available quantity.'}, status=status.HTTP_400_BAD_REQUEST)
+
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
