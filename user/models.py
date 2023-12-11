@@ -89,9 +89,13 @@ class Sale(models.Model):
     product = models.ForeignKey(Products, on_delete=models.CASCADE)
     quantity_sold = models.PositiveIntegerField()
     sale_date = models.DateField()
+    total = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
+
+        self.total = self.product.price * self.quantity_sold
+
         # Deduct quantity_sold from the product quantity
         self.product.quantity -= self.quantity_sold
 
