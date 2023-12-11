@@ -9,7 +9,7 @@ class SaleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Sale
-        fields = ['id', 'user', 'user_name', 'user_profile_image', 'product', 'product_name', 'quantity_sold', 'sale_date', 'total']
+        fields = ['id', 'user', 'user_name', 'user_profile_image', 'product', 'product_name', 'quantity_sold', 'sale_date', 'total', 'status']
 
     def get_user_name(self, obj):
         print(obj)
