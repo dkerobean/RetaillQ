@@ -84,6 +84,28 @@ class Products(models.Model):
         super(Products, self).save(*args, **kwargs)
 
 
+class ExpenseCategory(models.Model):
+    name = models.CharField(max_length=50)
+    description = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class Expense(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    category = models.ForeignKey(ExpenseCategory, on_delete=models.SET_NULL, null=True, blank=True)
+    description = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class Transaction(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    transaction_type = models.CharField(max_length=10, choices=[('income', 'Income'), ('expense', 'Expense')])
+    description = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
 class Sale(models.Model):
 
     STATUS_CHOICES = [
@@ -115,13 +137,3 @@ class Sale(models.Model):
 
         # Call the original save method to save the Sale instance
         super(Sale, self).save(*args, **kwargs)
-
-
-class Transaction(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
-    transaction_type = models.CharField(max_length=10,
-                                        choices=[('income', 'Income'),
-                                                 ('expense', 'Expense')])
-    description = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
