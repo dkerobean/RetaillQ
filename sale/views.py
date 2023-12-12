@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from user.models import CustomUser, Sale, Products
-from .serializers import SaleSerializer
+from user.models import CustomUser, Sale, Products, Expense
+from .serializers import SaleSerializer, ExpenseSerializer
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
@@ -58,3 +58,14 @@ class SaleView(APIView):
                 {"error": f"Product with id {pk} not found."},
                 status=status.HTTP_404_NOT_FOUND,
             )
+
+
+class ExpensesView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        expense = Expense.objects.filter(user=request.user)
+        serializer = ExpenseSerializer(expense)
+        return Response(serializer.data if expense else [], status=status.HTTP_200_OK)
+
+    
