@@ -36,11 +36,14 @@ class ExpenseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Expense
-        fields = ['id', 'amount', 'description', 'created_at', 'user', 'user_profile_image', 'user_name', 'category_name' ]
+        fields = ['id', 'amount', 'description', 'created_at', 'user', 'user_profile_image', 'user_name', 'category_name', 'category' ]
+
+    # def to_representation(self, instance):
+    #     representation = super().to_representation(instance)
+    #     representation['category'] = ExpenseCategorySerializer(instance.category).data
+    #     return representation
 
     def get_user_name(self, obj):
-        print(obj)
-        print(obj.user)
         return obj.user.profiles.name if obj.user.profiles else ''
 
     def get_user_profile_image(self, obj):

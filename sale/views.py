@@ -129,7 +129,8 @@ class ExpensesView(APIView):
 
 
 class ExpenseView(APIView):
-    authentication_classes = [IsAuthenticated]
+
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, pk):
         expense = get_object_or_404(Expense, id=pk, user=request.user)
