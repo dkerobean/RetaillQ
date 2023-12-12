@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from user.models import Sale, Expense
+from user.models import Sale, Expense, ExpenseCategory
 
 
 class SaleSerializer(serializers.ModelSerializer):
@@ -21,6 +21,12 @@ class SaleSerializer(serializers.ModelSerializer):
 
     def get_product_name(self, obj):
         return obj.product.name if obj.product else ''
+
+
+class ExpenseCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ExpenseCategory
+        fields = '__all__'
 
 
 class ExpenseSerializer(serializers.ModelSerializer):
