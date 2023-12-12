@@ -30,6 +30,21 @@ class ExpenseCategorySerializer(serializers.ModelSerializer):
 
 
 class ExpenseSerializer(serializers.ModelSerializer):
+    user_name = serializers.SerializerMethodField()
+    user_profile_image = serializers.SerializerMethodField()
+    category_name = serializers.SerializerMethodField()
+
     class Meta:
         model = Expense
-        fields = '__all__'
+        fields = ['id', 'amount', 'description', 'created_at', 'user', 'user_profile_image', 'user_name', 'category_name' ]
+
+    def get_user_name(self, obj):
+        print(obj)
+        print(obj.user)
+        return obj.user.profiles.name if obj.user.profiles else ''
+
+    def get_user_profile_image(self, obj):
+        return obj.user.profiles.avatar.url if obj.user.profiles and obj.user.profiles.avatar else ''
+
+    def get_category_name(self, obj):
+        return obj.category.name if obj.category else ''
