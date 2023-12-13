@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from user.models import Sale, Expense, ExpenseCategory
+from user.models import Sale, Expense, ExpenseCategory, Transaction
 
 
 class SaleSerializer(serializers.ModelSerializer):
@@ -51,3 +51,9 @@ class ExpenseSerializer(serializers.ModelSerializer):
 
     def get_category_name(self, obj):
         return obj.category.name if obj.category else ''
+
+
+class TransactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Transaction
+        fields = '__all__'
