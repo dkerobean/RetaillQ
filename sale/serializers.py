@@ -54,6 +54,15 @@ class ExpenseSerializer(serializers.ModelSerializer):
 
 
 class TransactionSerializer(serializers.ModelSerializer):
+    user_name = serializers.SerializerMethodField()
+    user_profile_image = serializers.SerializerMethodField()
+
     class Meta:
         model = Transaction
         fields = '__all__'
+
+    def get_user_name(self, obj):
+        return obj.user.profiles.name if obj.user.profiles else ''
+
+    def get_user_profile_image(self, obj):
+        return obj.user.profiles.avatar.url if obj.user.profiles and obj.user.profiles.avatar else ''

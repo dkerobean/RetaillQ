@@ -13,4 +13,8 @@ urlpatterns = [
     path('expenses-category/', views.ExpenseCategoriesView.as_view(), name="expense-category"),
     path('expenses-category/<int:pk>/', views.ExpenseCategoriesView.as_view(), name="expense-detail"),
     path('expense-category/<int:pk>/', views.ExpenseCategoryView.as_view(), name="expense-single"),
+
+    path('transactions/', views.TransactionsView.as_view(), name="transactions"),
+    path('transactions/<int:pk>/', views.TransactionsView.as_view(), name="transactions-detail"),
+    path('transaction/<int:pk>/', views.TransactionView.as_view(), name="transaction-single"),
 ]

@@ -162,6 +162,11 @@ class TransactionsView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def delete(self, request, pk):
+        transaction = get_object_or_404(Transaction, id=pk, user=request.user)
+        transaction.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class TransactionView(APIView):
     def get(self, request, pk):
