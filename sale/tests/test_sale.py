@@ -48,7 +48,7 @@ class SaleTestCase(APITestCase):
             'sale_date': '2013-12-01'
         }
 
-        response = self.client.post(reverse('sale'), data=new_sale, format='json')
+        response = self.client.post(reverse('sale'), data=new_sale, format='json')  # noqa
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Sale.objects.count(), 2)
