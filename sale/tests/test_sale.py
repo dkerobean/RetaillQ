@@ -15,14 +15,14 @@ class SaleTestCase(APITestCase):
         )
 
         # authenticate the user
-        self.client.force_authentication(user=self.user)
+        self.client.force_authenticate(user=self.user)
 
         # create a product
         self.product_data = {
             'user': self.user,
             'name': 'Test Product',
             'price': '12.99',
-            'quantity': 1,
+            'quantity': 100,
         }
 
         self.product = Products.objects.create(**self.product_data)
@@ -37,7 +37,8 @@ class SaleTestCase(APITestCase):
 
         self.sale = Sale.objects.create(**self.sale_data)
 
-        self.url = reverse('sale-details', kwargs={'pk': self.sale.id})
+        self.url = reverse('sale-detail', kwargs={'pk': self.sale.id})
+        self.url2 = reverse('sale-single', kwargs={'pk': self.sale.id})
 
     def test_create_sale(self):
         new_sale = {
@@ -47,24 +48,24 @@ class SaleTestCase(APITestCase):
             'sale_date': '2013-12-01'
         }
 
-        response = self.client.post(reverse('sales'), new_sale, format='json')
+        response = self.client.post(reverse('sale'), data=new_sale, format='json')
 
-        self.assertEqual(response.status_code, status=status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Sale.objects.count(), 2)
 
     def test_retrieve_all_sales(self):
 
-        response = self.client.get(reverse('sales'))
+        response = self.client.get(reverse('sale'))
 
-        self.assertEqual(response.status_code, status=status.HTTP_200_OK)
-        self.assertEqual(response.data[0]['quantity_sold'], 5)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data[0]['quantity_sold'], 1)
 
     def test_retrieve_one_sale(self):
 
-        response = self.client.get(self.url)
+        response = self.client.get(self.url2)
 
-        self.assertEqual(response.status_code, status=status.HTTP_200_OK)
-        self.assertEqual(response.data[0]['quantity_sold'], 1)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['quantity_sold'], 1)
 
     def test_update_sale(self):
 
@@ -75,8 +76,8 @@ class SaleTestCase(APITestCase):
             'sale_date': '2019-12-01'
         }
 
-        response = self.client.put(self.url, updated_sale=updated_sale)
+        response = self.client.put(self.url, updated_sale)
 
-        self.assertEqual(response.status_code, status=status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.product.refresh_from_db()
-        self.assertEqual(self.sale.quantity_sold, 52)
+        self.assertEqual(response.data['quantity_sold'], 52)

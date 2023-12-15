@@ -9,7 +9,9 @@ class SaleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Sale
-        fields = ['id', 'user', 'user_name', 'user_profile_image', 'product', 'product_name', 'quantity_sold', 'sale_date', 'total', 'status']
+        fields = ['id', 'user', 'user_name', 'user_profile_image',
+                  'product', 'product_name', 'quantity_sold', 'sale_date',
+                  'total', 'status']
 
     def get_user_name(self, obj):
         print(obj)
@@ -17,7 +19,7 @@ class SaleSerializer(serializers.ModelSerializer):
         return obj.user.profiles.name if obj.user.profiles else ''
 
     def get_user_profile_image(self, obj):
-        return obj.user.profiles.avatar.url if obj.user.profiles and obj.user.profiles.avatar else ''
+        return obj.user.profiles.avatar.url if obj.user.profiles and obj.user.profiles.avatar else '' # noqa
 
     def get_product_name(self, obj):
         return obj.product.name if obj.product else ''
@@ -36,18 +38,15 @@ class ExpenseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Expense
-        fields = ['id', 'amount', 'description', 'created_at', 'user', 'user_profile_image', 'user_name', 'category_name', 'category' ]
-
-    # def to_representation(self, instance):
-    #     representation = super().to_representation(instance)
-    #     representation['category'] = ExpenseCategorySerializer(instance.category).data
-    #     return representation
+        fields = ['id', 'amount', 'description',
+                  'created_at', 'user', 'user_profile_image',
+                  'user_name', 'category_name', 'category']
 
     def get_user_name(self, obj):
         return obj.user.profiles.name if obj.user.profiles else ''
 
     def get_user_profile_image(self, obj):
-        return obj.user.profiles.avatar.url if obj.user.profiles and obj.user.profiles.avatar else ''
+        return obj.user.profiles.avatar.url if obj.user.profiles and obj.user.profiles.avatar else '' # noqa
 
     def get_category_name(self, obj):
         return obj.category.name if obj.category else ''
@@ -65,4 +64,4 @@ class TransactionSerializer(serializers.ModelSerializer):
         return obj.user.profiles.name if obj.user.profiles else ''
 
     def get_user_profile_image(self, obj):
-        return obj.user.profiles.avatar.url if obj.user.profiles and obj.user.profiles.avatar else ''
+        return obj.user.profiles.avatar.url if obj.user.profiles and obj.user.profiles.avatar else '' # noqa

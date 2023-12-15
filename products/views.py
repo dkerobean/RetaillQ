@@ -56,7 +56,3 @@ class ProductView(APIView):
                 {"error": f"Product with id {pk} not found."},
                 status=status.HTTP_404_NOT_FOUND,
             )
-
-
-
-

@@ -2,7 +2,8 @@ from django.contrib import admin
 
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import Group
-from .models import CustomUser, Profile, Transaction, Products, Sale, Sale, Expense, ExpenseCategory
+from .models import (CustomUser, Profile, Transaction,
+                     Products, Sale, Expense, ExpenseCategory)
 
 
 class CustomUserAdmin(UserAdmin):

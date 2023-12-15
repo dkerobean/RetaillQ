@@ -72,7 +72,9 @@ class Products(models.Model):
     quantity = models.IntegerField()
     initial_quantity = models.IntegerField(null=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    remaining_percentage = models.DecimalField(max_digits=5, decimal_places=2, default=100.00)
+    remaining_percentage = models.DecimalField(max_digits=5,
+                                               decimal_places=2,
+                                               default=100.00)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -94,7 +96,8 @@ class ExpenseCategory(models.Model):
 class Expense(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-    category = models.ForeignKey(ExpenseCategory, on_delete=models.SET_NULL, null=True)
+    category = models.ForeignKey(ExpenseCategory,
+                                 on_delete=models.SET_NULL, null=True)
     description = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -102,7 +105,9 @@ class Expense(models.Model):
 class Transaction(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-    transaction_type = models.CharField(max_length=10, choices=[('income', 'Income'), ('expense', 'Expense')])
+    transaction_type = models.CharField(max_length=10,
+                                        choices=[('income', 'Income'),
+                                                 ('expense', 'Expense')])
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -119,8 +124,10 @@ class Sale(models.Model):
     product = models.ForeignKey(Products, on_delete=models.CASCADE)
     quantity_sold = models.PositiveIntegerField()
     sale_date = models.DateField()
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='completed')
-    total = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    status = models.CharField(max_length=20,
+                              choices=STATUS_CHOICES, default='completed')
+    total = models.DecimalField(max_digits=10, decimal_places=2,
+                                null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
@@ -131,7 +138,7 @@ class Sale(models.Model):
         self.product.quantity -= self.quantity_sold
 
         # Calculate the remaining  percentage
-        remaining_percentage = (self.product.quantity / self.product.initial_quantity) * 100
+        remaining_percentage = (self.product.quantity / self.product.initial_quantity) * 100  # noqa
         self.product.remaining_percentage = remaining_percentage
 
         self.product.save()
