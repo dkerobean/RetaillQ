@@ -63,10 +63,11 @@ class IncomeExpenseView(APIView):
 class ProductsView(APIView):
     def get(self, request, *args, **kwargs):
         user = request.user
+
         top_selling_products = Sale.objects.filter(status='completed')\
-            .values('product__id', 'product__name', 'total', 'product__remaining_percentage', 'quantity_sold')\
+            .values('id', 'product__name', 'total', 'product__remaining_percentage', 'quantity_sold')\
             .annotate(total_sold=Sum('quantity_sold'))\
-            .order_by('-total_sold')[:5]
+            .order_by('-total_sold')[:4]
 
         data = {
             "top_selling_products": top_selling_products,
