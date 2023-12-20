@@ -1,5 +1,11 @@
 from rest_framework import serializers
+from user.models import Transaction
 
+
+class TransactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Transaction
+        fields = ['amount', 'created_at', 'transaction_type']
 
 class IncomeExpenseSerializer(serializers.Serializer):
    income = serializers.DecimalField(max_digits=10, decimal_places=2)
@@ -12,7 +18,5 @@ class IncomeExpenseSerializer(serializers.Serializer):
 
 class ProductsSerializer(serializers.Serializer):
    top_selling_products = serializers.DecimalField(max_digits=10, decimal_places=2)
-
-
 
 
