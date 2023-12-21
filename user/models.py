@@ -98,6 +98,7 @@ class Expense(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     category = models.ForeignKey(ExpenseCategory,
                                  on_delete=models.SET_NULL, null=True)
+    expense_date = models.DateField()
     description = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -108,6 +109,7 @@ class Transaction(models.Model):
     transaction_type = models.CharField(max_length=10,
                                         choices=[('income', 'Income'),
                                                  ('expense', 'Expense')])
+    transaction_date = models.DateField()
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 

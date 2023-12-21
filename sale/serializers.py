@@ -40,7 +40,7 @@ class ExpenseSerializer(serializers.ModelSerializer):
         model = Expense
         fields = ['id', 'amount', 'description',
                   'created_at', 'user', 'user_profile_image',
-                  'user_name', 'category_name', 'category']
+                  'user_name', 'category_name', 'category', 'expense_date']
 
     def get_user_name(self, obj):
         return obj.user.profiles.name if obj.user.profiles else ''
