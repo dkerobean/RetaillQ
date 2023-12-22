@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from user.models import Transaction, Expense, ExpenseCategory
+from user.models import Transaction, Expense, ExpenseCategory, Sale
 
 
 class TransactionSerializer(serializers.ModelSerializer):
@@ -50,5 +50,15 @@ class ExpenseSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
+
+
+class IncomeExpenseSerializer(serializers.Serializer):
+    month = serializers.IntegerField()
+    year = serializers.IntegerField()
+    income = serializers.DecimalField(max_digits=10, decimal_places=2)
+    expense = serializers.DecimalField(max_digits=10, decimal_places=2)
+
+
+
 
 

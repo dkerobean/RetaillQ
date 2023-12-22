@@ -2,14 +2,15 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from user.models import Transaction, Expense, Sale, Products, Expense, ExpenseCategory
-from .serializers import IncomeExpenseSerializer, ProductsSerializer, TransactionSerializer, ExpenseCategorySerializer, ExpenseSerializer
+from .serializers import IncomeExpenseSerializer, ProductsSerializer, TransactionSerializer, ExpenseCategorySerializer, ExpenseSerializer, IncomeExpenseSerializer
 from django.db.models import Sum, Count
 from rest_framework.permissions import IsAuthenticated
 from django.db.models.functions import TruncMonth, TruncYear, TruncQuarter
-from django.db.models import Sum, Case, When, Value, IntegerField,CharField
+from django.db.models import Sum, Case, When, Value, IntegerField, CharField
 from rest_framework import viewsets
 from datetime import datetime, timedelta
 from django.utils import timezone
+from django.db.models.functions import ExtractMonth, ExtractYear
 
 
 
@@ -204,3 +205,52 @@ class ExpenseCategoryView(APIView):
         }
 
         return Response(result, status=status.HTTP_200_OK)
+
+
+class IncomeExpenseDashboardView(APIView):
+    def get(self, request):
+        # Get the requested year from the query parameters, default to the current year
+        requested_year = request.query_params.get('year', datetime.now().year)
+
+        # Create a list to store results for each month
+        result_list = []
+
+        # Calculate income vs expense for each month in the requested year
+        for month in range(1, 13):  # Loop through all 12 months
+            # Filter income transactions
+            income_transactions = Transaction.objects.filter(
+                transaction_type='income',
+                transaction_date__month=month,
+                transaction_date__year=requested_year
+            ).aggregate(income=Sum('amount'))['income'] or 0
+
+            # Filter completed sales
+            completed_sales = Sale.objects.filter(
+                status='completed',
+                sale_date__month=month,
+                sale_date__year=requested_year
+            ).aggregate(income=Sum('total'))['income'] or 0
+
+            # Filter expenses
+            expenses = Transaction.objects.filter(
+                transaction_type='expense',
+                transaction_date__month=month,
+                transaction_date__year=requested_year
+            ).aggregate(expense=Sum('amount'))['expense'] or 0
+
+            # Calculate income vs expense
+            income = income_transactions + completed_sales
+            expense = expenses
+
+            # Append the result for the current month to the result_list
+            result_list.append({
+                'month': month,
+                'year': requested_year,
+                'income': income,
+                'expense': expense,
+            })
+
+        # Serialize the result list
+        serializer = IncomeExpenseSerializer(result_list, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
