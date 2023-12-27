@@ -1,18 +1,14 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from user.models import Transaction, Expense, Sale, Products, Expense, ExpenseCategory
-from .serializers import IncomeExpenseSerializer, ProductsSerializer, TransactionSerializer, ExpenseCategorySerializer, ExpenseSerializer, IncomeExpenseSerializer, IncomeExpenseSerializerDashboard
-from django.db.models import Sum, Count
+from user.models import Transaction, Expense, Sale, Products
+from .serializers import (IncomeExpenseSerializer, ProductsSerializer,
+                          TransactionSerializer,
+                          IncomeExpenseSerializerDashboard)
+from django.db.models import Sum
 from rest_framework.permissions import IsAuthenticated
-from django.db.models.functions import TruncMonth, TruncYear, TruncQuarter
-from django.db.models import Sum, Case, When, Value, IntegerField, CharField
-from rest_framework import viewsets
-from datetime import datetime, timedelta
+from datetime import datetime
 from django.utils import timezone
-from django.db.models.functions import ExtractMonth, ExtractYear
-from dateutil.relativedelta import relativedelta
-
 
 
 class IncomeExpenseView(APIView):
@@ -72,8 +68,9 @@ class ProductsView(APIView):
     def get(self, request, *args, **kwargs):
         user = request.user
 
-        # Get unique products with the highest total sold, considering only completed sales
-        top_selling_products = Sale.objects.filter(status='completed')\
+        # Get unique products with the highest total sold for the current user
+        top_selling_products = Sale.objects.filter(user=user,
+                                                   status='completed')\
             .values('product__id', 'product__name')\
             .annotate(total_sold=Sum('quantity_sold'))\
             .order_by('-total_sold')[:4]
@@ -82,9 +79,9 @@ class ProductsView(APIView):
         top_selling_products_details = []
         for product_data in top_selling_products:
             product = Products.objects.get(id=product_data['product__id'])
-            remaining_percentage = (product.quantity / product.initial_quantity) * 100
+            remaining_percentage = (product.quantity / product.initial_quantity) * 100  # noqa
             product_data['total'] = product_data['total_sold'] * product.price
-            product_data['product__remaining_percentage'] = remaining_percentage
+            product_data['product__remaining_percentage'] = remaining_percentage  # noqa
             product_data['quantity_sold'] = product_data['total_sold']
 
             top_selling_products_details.append(product_data)
@@ -98,18 +95,10 @@ class ProductsView(APIView):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def get_five_months_ago_start_date():
-        # Calculate the start date of the month 5 months ago
-        today = timezone.now()
-        five_months_ago = today - relativedelta(months=5)
-        start_of_month_five_months_ago = datetime.datetime(
-            five_months_ago.year, five_months_ago.month, 1, 0, 0, 0, tzinfo=timezone.utc
-        )
-        return start_of_month_five_months_ago
-
 
 class TransactionView(APIView):
     permission_classes = [IsAuthenticated]
+
     def get(self, request):
         transactions = Transaction.objects.order_by('-created_at')[:5]
         serializer = TransactionSerializer(data=transactions, many=True)
@@ -127,8 +116,10 @@ class ExpenseCategoryView(APIView):
         today = timezone.now()
 
         # Calculate the start and end dates for this month
-        start_of_month = today.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-        end_of_month = (start_of_month + timezone.timedelta(days=32)).replace(day=1, microsecond=0)
+        start_of_month = today.replace(day=1, hour=0, minute=0,
+                                       second=0, microsecond=0)
+        end_of_month = (start_of_month + timezone.timedelta(days=32)
+                        ).replace(day=1, microsecond=0)
 
         # ... (similar calculations for other time periods)
 
@@ -146,10 +137,11 @@ class ExpenseCategoryView(APIView):
         ).values('description').annotate(total_amount=Sum('amount'))
 
         # Combine expenses and transactions data for this month
-        this_month_expenses = this_month_expenses.union(this_month_transactions)
+        this_month_expenses = this_month_expenses.union(this_month_transactions)  # noqa
 
         # Retrieve expenses by categories for last month
-        start_of_last_month = (start_of_month - timezone.timedelta(days=1)).replace(day=1)
+        start_of_last_month = (start_of_month - timezone.timedelta(days=1)
+                               ).replace(day=1)
         end_of_last_month = start_of_month
 
         last_month_expenses = Expense.objects.filter(
@@ -165,11 +157,13 @@ class ExpenseCategoryView(APIView):
         ).values('description').annotate(total_amount=Sum('amount'))
 
         # Combine expenses and transactions data for last month
-        last_month_expenses = last_month_expenses.union(last_month_transactions)
+        last_month_expenses = last_month_expenses.union(last_month_transactions)  # noqa
 
         # Retrieve expenses by categories for this year
-        start_of_year = today.replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)
-        end_of_year = (start_of_year + timezone.timedelta(days=366)).replace(day=1, microsecond=0)
+        start_of_year = today.replace(month=1, day=1, hour=0,
+                                      minute=0, second=0, microsecond=0)
+        end_of_year = (start_of_year + timezone.timedelta(days=366)
+                       ).replace(day=1, microsecond=0)
 
         this_year_expenses = Expense.objects.filter(
             user=user,
@@ -188,8 +182,11 @@ class ExpenseCategoryView(APIView):
 
         # Retrieve expenses by categories for this quarter
         current_quarter = (today.month - 1) // 3 + 1
-        start_of_quarter = today.replace(month=(current_quarter - 1) * 3 + 1, day=1, hour=0, minute=0, second=0, microsecond=0)
-        end_of_quarter = (start_of_quarter + timezone.timedelta(days=95)).replace(day=1, microsecond=0)
+        start_of_quarter = today.replace(month=(current_quarter - 1) * 3 + 1,
+                                         day=1, hour=0, minute=0, second=0,
+                                         microsecond=0)
+        end_of_quarter = (start_of_quarter + timezone.timedelta(days=95)
+                          ).replace(day=1, microsecond=0)
 
         this_quarter_expenses = Expense.objects.filter(
             user=user,
@@ -204,7 +201,7 @@ class ExpenseCategoryView(APIView):
         ).values('description').annotate(total_amount=Sum('amount'))
 
         # Combine expenses and transactions data for this quarter
-        this_quarter_expenses = this_quarter_expenses.union(this_quarter_transactions)
+        this_quarter_expenses = this_quarter_expenses.union(this_quarter_transactions)  # noqa
 
         # Organize data in the desired format
         result = {
@@ -219,7 +216,7 @@ class ExpenseCategoryView(APIView):
 
 class IncomeExpenseDashboardView(APIView):
     def get(self, request):
-        # Get the requested year from the query parameters, default to the current year
+        # Get the requested year from the query parameters
         requested_year = request.query_params.get('year', datetime.now().year)
 
         # Create a list to store results for each month
