@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from user.models import Transaction, Expense, Sale, Products, Expense, ExpenseCategory
-from .serializers import IncomeExpenseSerializer, ProductsSerializer, TransactionSerializer, ExpenseCategorySerializer, ExpenseSerializer, IncomeExpenseSerializer
+from .serializers import IncomeExpenseSerializer, ProductsSerializer, TransactionSerializer, ExpenseCategorySerializer, ExpenseSerializer, IncomeExpenseSerializer, IncomeExpenseSerializerDashboard
 from django.db.models import Sum, Count
 from rest_framework.permissions import IsAuthenticated
 from django.db.models.functions import TruncMonth, TruncYear, TruncQuarter
@@ -11,6 +11,7 @@ from rest_framework import viewsets
 from datetime import datetime, timedelta
 from django.utils import timezone
 from django.db.models.functions import ExtractMonth, ExtractYear
+from dateutil.relativedelta import relativedelta
 
 
 
@@ -96,6 +97,15 @@ class ProductsView(APIView):
         serializer.is_valid()
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def get_five_months_ago_start_date():
+        # Calculate the start date of the month 5 months ago
+        today = timezone.now()
+        five_months_ago = today - relativedelta(months=5)
+        start_of_month_five_months_ago = datetime.datetime(
+            five_months_ago.year, five_months_ago.month, 1, 0, 0, 0, tzinfo=timezone.utc
+        )
+        return start_of_month_five_months_ago
 
 
 class TransactionView(APIView):
@@ -251,6 +261,6 @@ class IncomeExpenseDashboardView(APIView):
             })
 
         # Serialize the result list
-        serializer = IncomeExpenseSerializer(result_list, many=True)
+        serializer = IncomeExpenseSerializerDashboard(result_list, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)

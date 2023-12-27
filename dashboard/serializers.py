@@ -17,7 +17,8 @@ class IncomeExpenseSerializer(serializers.Serializer):
 
 
 class ProductsSerializer(serializers.Serializer):
-   top_selling_products = serializers.DecimalField(max_digits=10, decimal_places=2)
+    top_selling_products = serializers.DecimalField(max_digits=10, decimal_places=2)
+    start_of_month_five_months_ago = serializers.DecimalField(max_digits=10, decimal_places=2)
 
 
 # Expense
@@ -52,7 +53,7 @@ class ExpenseSerializer(serializers.ModelSerializer):
         return instance
 
 
-class IncomeExpenseSerializer(serializers.Serializer):
+class IncomeExpenseSerializerDashboard(serializers.Serializer):
     month = serializers.IntegerField()
     year = serializers.IntegerField()
     income = serializers.DecimalField(max_digits=10, decimal_places=2)
