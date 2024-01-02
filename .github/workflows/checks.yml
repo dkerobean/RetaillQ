@@ -25,10 +25,6 @@ jobs:
         run: |
           flake8
 
-      - name: Set up database
-        run: |
-          python manage.py migrate
-
       - name: Run tests
         run: |
           python manage.py test
