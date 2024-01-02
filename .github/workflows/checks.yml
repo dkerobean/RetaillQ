@@ -25,6 +25,10 @@ jobs:
         run: |
           flake8
 
+      - name: Set up test database
+        run: |
+          cp db.sqlite3 test_db.sqlite3
+
       - name: Run tests
         run: |
           python manage.py test
