@@ -3,6 +3,7 @@ from user.models import Sale, Expense, ExpenseCategory, Transaction
 
 
 class SaleSerializer(serializers.ModelSerializer):
+    currency = serializers.CharField(source='user.profile.currency_symbol', read_only=True)
     user_name = serializers.SerializerMethodField()
     product_name = serializers.SerializerMethodField()
     user_profile_image = serializers.SerializerMethodField()
@@ -11,7 +12,7 @@ class SaleSerializer(serializers.ModelSerializer):
         model = Sale
         fields = ['id', 'user', 'user_name', 'user_profile_image',
                   'product', 'product_name', 'quantity_sold', 'sale_date',
-                  'total', 'status']
+                  'total', 'status', 'currency']
 
     def get_user_name(self, obj):
         print(obj)
@@ -32,6 +33,7 @@ class ExpenseCategorySerializer(serializers.ModelSerializer):
 
 
 class ExpenseSerializer(serializers.ModelSerializer):
+    currency = serializers.CharField(source='user.profiles.currency_symbol', read_only=True)
     user_name = serializers.SerializerMethodField()
     user_profile_image = serializers.SerializerMethodField()
     category_name = serializers.SerializerMethodField()
@@ -40,7 +42,7 @@ class ExpenseSerializer(serializers.ModelSerializer):
         model = Expense
         fields = ['id', 'amount', 'description',
                   'created_at', 'user', 'user_profile_image',
-                  'user_name', 'category_name', 'category', 'expense_date']
+                  'user_name', 'category_name', 'category', 'expense_date', 'currency']
 
     def get_user_name(self, obj):
         return obj.user.profiles.name if obj.user.profiles else ''
@@ -55,6 +57,7 @@ class ExpenseSerializer(serializers.ModelSerializer):
 class TransactionSerializer(serializers.ModelSerializer):
     user_name = serializers.SerializerMethodField()
     user_profile_image = serializers.SerializerMethodField()
+    currency = serializers.CharField(source='user.profiles.currency_symbol', read_only=True)
 
     class Meta:
         model = Transaction
