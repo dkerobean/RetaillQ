@@ -49,6 +49,8 @@ class IncomeExpenseView(APIView):
         # cashflow
         cash_flow = total_income + total_expense + sales
 
+        currency_symbol = user.profiles.currency_symbol
+
         data = {
             'income': total_income,
             'expense': total_expense,
@@ -56,6 +58,7 @@ class IncomeExpenseView(APIView):
             'profit': profit,
             'products_sold': products_sold,
             'cash_flow': cash_flow,
+            'currency': currency_symbol,
         }
 
         serializer = IncomeExpenseSerializer(data=data)
