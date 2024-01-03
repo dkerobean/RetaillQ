@@ -71,6 +71,8 @@ class ProductsView(APIView):
     def get(self, request, *args, **kwargs):
         user = request.user
 
+        currency = user.profiles.currency_symbol
+
         # Get unique products with the highest total sold for the current user
         top_selling_products = Sale.objects.filter(user=user,
                                                    status='completed')\
@@ -91,6 +93,7 @@ class ProductsView(APIView):
 
         data = {
             "top_selling_products": top_selling_products_details,
+            "currency": currency,
         }
 
         serializer = ProductsSerializer(data=data)

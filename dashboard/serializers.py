@@ -1,11 +1,13 @@
 from rest_framework import serializers
-from user.models import Transaction, Expense, ExpenseCategory
+from user.models import Transaction, Expense, ExpenseCategory, Profile
 
 
 class TransactionSerializer(serializers.ModelSerializer):
+    currency = serializers.CharField(source='user.profiles.currency_symbol', read_only=True)
+
     class Meta:
         model = Transaction
-        fields = ['amount', 'created_at', 'transaction_type']
+        fields = ['amount', 'created_at', 'transaction_type', 'currency']
 
 
 class IncomeExpenseSerializer(serializers.Serializer):
@@ -23,6 +25,7 @@ class ProductsSerializer(serializers.Serializer):
                                                     decimal_places=2)
     start_of_month_five_months_ago = serializers.DecimalField(max_digits=10,
                                                               decimal_places=2)
+    currency = serializers.CharField()
 
 
 # Expense
