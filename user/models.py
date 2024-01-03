@@ -41,6 +41,8 @@ class Profile(models.Model):
     address = models.CharField(max_length=70, null=True, blank=True)
     business_type = models.CharField(max_length=70, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    currency_symbol = models.CharField(max_length=5, default='$', null=True,
+                                       blank=True)
 
     def __str__(self):
         return self.display_name
