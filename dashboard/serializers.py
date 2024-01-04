@@ -66,3 +66,4 @@ class IncomeExpenseSerializerDashboard(serializers.Serializer):
     year = serializers.IntegerField()
     income = serializers.DecimalField(max_digits=10, decimal_places=2)
     expense = serializers.DecimalField(max_digits=10, decimal_places=2)
+    currency = serializers.CharField()

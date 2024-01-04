@@ -228,6 +228,8 @@ class IncomeExpenseDashboardView(APIView):
         # Create a list to store results for each month
         result_list = []
 
+        currency = request.user.profiles.currency_symbol
+
         # Calculate income vs expense for each month in the requested year
         for month in range(1, 13):  # Loop through all 12 months
             # Filter income transactions
@@ -261,6 +263,7 @@ class IncomeExpenseDashboardView(APIView):
                 'year': requested_year,
                 'income': income,
                 'expense': expense,
+                'currency': currency
             })
 
         # Serialize the result list
