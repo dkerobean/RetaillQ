@@ -4,6 +4,7 @@ from django.contrib.auth.models import (AbstractBaseUser,
                                         BaseUserManager)
 import uuid
 from .utils import generate_organization_id, generate_product_id
+from django.utils import timezone
 
 
 class CustomUserManager(BaseUserManager):
@@ -43,6 +44,10 @@ class Profile(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     currency_symbol = models.CharField(max_length=5, default='$', null=True,
                                        blank=True)
+    subscription = models.OneToOneField('Subscription',
+                                        on_delete=models.CASCADE,
+                                        null=True, blank=True,
+                                        related_name='profile_subscriptions')
 
     def __str__(self):
         return self.display_name
@@ -149,3 +154,32 @@ class Sale(models.Model):
 
         # Call the original save method to save the Sale instance
         super(Sale, self).save(*args, **kwargs)
+
+
+class Subscription(models.Model):
+    PLAN_CHOICES = [('free', 'Free'),
+                    ('standard_monthly', 'Standard Monthly'),
+                    ('standard_yearly', 'Standard Yearly'),
+                    ('premium_monthly', 'Premium Monthly'),
+                    ('premium_yearly', 'Premium Yearly')
+                    ]
+
+    profile = models.OneToOneField(Profile, on_delete=models.CASCADE,
+                                   related_name='subscriptions')
+    plan = models.CharField(max_length=20,
+                            choices=PLAN_CHOICES, default='free')
+    start_date = models.DateTimeField(default=timezone.now)
+    end_date = models.DateTimeField(null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if 'monthly' in self.plan:
+            self.end_date = self.start_date + timezone.timedelta(days=30)
+        elif 'yearly' in self.plan:
+            self.end_date = self.start_date + timezone.timedelta(days=365)
+        else:
+            self.end_date = None
+
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f'{self.profile.user.email} - {self.plan} Plan'

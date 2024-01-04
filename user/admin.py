@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import Group
 from .models import (CustomUser, Profile, Transaction,
-                     Products, Sale, Expense, ExpenseCategory)
+                     Products, Sale, Expense, ExpenseCategory, Subscription)
 
 
 class CustomUserAdmin(UserAdmin):
@@ -32,3 +32,4 @@ admin.site.register(Products)
 admin.site.register(Sale)
 admin.site.register(Expense)
 admin.site.register(ExpenseCategory)
+admin.site.register(Subscription)
