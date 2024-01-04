@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CustomUser, Transaction, Profile
+from .models import CustomUser, Transaction, Profile, Subscription
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -42,10 +42,16 @@ class TrasactionSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class SubscriptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subscription
+        fields = ['plan', 'start_date', 'end_date']
+
+
 class UserProfileSerializer(serializers.ModelSerializer):
+
+    subscription = SubscriptionSerializer()
 
     class Meta:
         model = Profile
-        fields = fields = ['name', 'display_name', 'avatar',
-                           'mobile_number', 'address',
-                           'business_type', 'currency_symbol']
+        fields = ['name', 'display_name', 'avatar', 'mobile_number', 'address', 'business_type', 'currency_symbol', 'subscription']

@@ -15,6 +15,7 @@ class CustomUserManager(BaseUserManager):
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save()
+
         return user
 
     def create_superuser(self, email, password, **extra_fields):
@@ -44,10 +45,9 @@ class Profile(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     currency_symbol = models.CharField(max_length=5, default='$', null=True,
                                        blank=True)
-    subscription = models.OneToOneField('Subscription',
-                                        on_delete=models.CASCADE,
-                                        null=True, blank=True,
-                                        related_name='profile_subscriptions')
+    subscription = models.ForeignKey('Subscription', on_delete=models.SET_NULL,
+                                     null=True, blank=True,
+                                     related_name='user_subscriptions')
 
     def __str__(self):
         return self.display_name
@@ -157,17 +157,17 @@ class Sale(models.Model):
 
 
 class Subscription(models.Model):
-    PLAN_CHOICES = [('free', 'Free'),
-                    ('standard_monthly', 'Standard Monthly'),
-                    ('standard_yearly', 'Standard Yearly'),
-                    ('premium_monthly', 'Premium Monthly'),
-                    ('premium_yearly', 'Premium Yearly')
-                    ]
+    PLAN_CHOICES = [
+        ('free', 'Free'),
+        ('standard_monthly', 'Standard Monthly'),
+        ('standard_yearly', 'Standard Yearly'),
+        ('premium_monthly', 'Premium Monthly'),
+        ('premium_yearly', 'Premium Yearly'),
+    ]
 
-    profile = models.OneToOneField(Profile, on_delete=models.CASCADE,
-                                   related_name='subscriptions')
-    plan = models.CharField(max_length=20,
-                            choices=PLAN_CHOICES, default='free')
+    plan = models.CharField(max_length=20, choices=PLAN_CHOICES, default='free', unique=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
     start_date = models.DateTimeField(default=timezone.now)
     end_date = models.DateTimeField(null=True, blank=True)
 
@@ -182,4 +182,4 @@ class Subscription(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f'{self.profile.user.email} - {self.plan} Plan'
+        return f'{self.plan} Plan'

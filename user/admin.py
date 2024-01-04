@@ -33,3 +33,4 @@ admin.site.register(Sale)
 admin.site.register(Expense)
 admin.site.register(ExpenseCategory)
 admin.site.register(Subscription)
+
