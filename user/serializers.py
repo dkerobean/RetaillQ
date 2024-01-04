@@ -50,8 +50,10 @@ class SubscriptionSerializer(serializers.ModelSerializer):
 
 class UserProfileSerializer(serializers.ModelSerializer):
 
-    subscription = SubscriptionSerializer()
+    subscription = SubscriptionSerializer(required=False)
 
     class Meta:
         model = Profile
-        fields = ['name', 'display_name', 'avatar', 'mobile_number', 'address', 'business_type', 'currency_symbol', 'subscription']
+        fields = ['name', 'display_name', 'avatar', 'mobile_number',
+                  'address', 'business_type', 'currency_symbol',
+                  'subscription']
