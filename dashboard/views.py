@@ -232,22 +232,25 @@ class IncomeExpenseDashboardView(APIView):
 
         # Calculate income vs expense for each month in the requested year
         for month in range(1, 13):  # Loop through all 12 months
-            # Filter income transactions
+            # Filter income transactions for the current user
             income_transactions = Transaction.objects.filter(
+                user=request.user,
                 transaction_type='income',
                 transaction_date__month=month,
                 transaction_date__year=requested_year
             ).aggregate(income=Sum('amount'))['income'] or 0
 
-            # Filter completed sales
+            # Filter completed sales for the current user
             completed_sales = Sale.objects.filter(
+                user=request.user,
                 status='completed',
                 sale_date__month=month,
                 sale_date__year=requested_year
             ).aggregate(income=Sum('total'))['income'] or 0
 
-            # Filter expenses
+            # Filter expenses for the current user
             expenses = Transaction.objects.filter(
+                user=request.user,
                 transaction_type='expense',
                 transaction_date__month=month,
                 transaction_date__year=requested_year
