@@ -48,12 +48,19 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         fields = ['plan', 'start_date', 'end_date']
 
 
+class CustomUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = '__all__'
+
+
 class UserProfileSerializer(serializers.ModelSerializer):
 
     subscription = SubscriptionSerializer(required=False)
+    user = CustomUserSerializer()
 
     class Meta:
         model = Profile
         fields = ['name', 'display_name', 'avatar', 'mobile_number',
                   'address', 'business_type', 'currency_symbol',
-                  'subscription']
+                  'subscription', 'user']
