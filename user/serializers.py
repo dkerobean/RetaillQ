@@ -51,7 +51,8 @@ class SubscriptionSerializer(serializers.ModelSerializer):
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = '__all__'
+        fields = ['id', 'organization_name', 'is_superuser',
+                  'email', 'country', 'is_staff', 'is_active']
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
