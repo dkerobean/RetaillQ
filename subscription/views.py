@@ -24,7 +24,7 @@ class UpgradeSubscriptionView(APIView):
         new_plan = request.data.get('new_plan')
 
         # Ensure the new plan is valid
-        if new_plan not in ['standard', 'premium']:
+        if new_plan not in ['Standard', 'Premium']:
             return Response({'error': 'Invalid subscription plan'},
                             status=status.HTTP_400_BAD_REQUEST)
 
