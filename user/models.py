@@ -165,8 +165,10 @@ class Subscription(models.Model):
         ('premium_yearly', 'Premium Yearly'),
     ]
 
-    plan = models.CharField(max_length=20, choices=PLAN_CHOICES, default='free', unique=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    plan = models.CharField(max_length=20, choices=PLAN_CHOICES,
+                            default='free', unique=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2,
+                                blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     start_date = models.DateTimeField(default=timezone.now)
     end_date = models.DateTimeField(null=True, blank=True)

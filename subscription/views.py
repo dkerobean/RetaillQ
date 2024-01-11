@@ -4,7 +4,6 @@ from user.models import Subscription
 from .serializers import SubscriptionSerializer
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from django.shortcuts import get_object_or_404
 
 
 class SubscriptionView(APIView):
@@ -13,7 +12,8 @@ class SubscriptionView(APIView):
     def get(self, request):
         subscriptions = Subscription.objects.all()
         serializer = SubscriptionSerializer(subscriptions, many=True)
-        return Response(serializer.data if subscriptions else [], status=status.HTTP_200_OK)
+        return Response(serializer.data if subscriptions else [],
+                        status=status.HTTP_200_OK)
 
 
 class UpgradeSubscriptionView(APIView):

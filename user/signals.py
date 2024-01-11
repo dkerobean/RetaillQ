@@ -12,7 +12,7 @@ def create_profile_and_subscription(sender, instance, created, **kwargs):
             display_name=user.organization_name
         )
 
-        free_plan_subscription = Subscription.objects.filter(plan='free').first()
+        free_plan_subscription = Subscription.objects.filter(plan='free').first()  # noqa
         if free_plan_subscription:
             user_profile.subscription = free_plan_subscription
             user_profile.save()

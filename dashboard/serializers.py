@@ -1,9 +1,10 @@
 from rest_framework import serializers
-from user.models import Transaction, Expense, ExpenseCategory, Profile
+from user.models import Transaction, Expense, ExpenseCategory
 
 
 class TransactionSerializer(serializers.ModelSerializer):
-    currency = serializers.CharField(source='user.profiles.currency_symbol', read_only=True)
+    currency = serializers.CharField(source='user.profiles.currency_symbol',
+                                     read_only=True)
 
     class Meta:
         model = Transaction
