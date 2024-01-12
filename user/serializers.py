@@ -58,7 +58,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
 
     subscription = SubscriptionSerializer(required=False)
-    user = CustomUserSerializer()
+    user = CustomUserSerializer(required=False)
 
     class Meta:
         model = Profile
