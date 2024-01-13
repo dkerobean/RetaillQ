@@ -24,7 +24,8 @@ class UpgradeSubscriptionView(APIView):
         new_plan = request.data.get('new_plan')
 
         # Ensure the new plan is valid
-        if new_plan not in ['Standard', 'Premium']:
+        if new_plan not in ['Standard_monthly', 'Premium_monthly',
+                            'Standard_yearly', 'Premium_yearly']:
             return Response({'error': 'Invalid subscription plan'},
                             status=status.HTTP_400_BAD_REQUEST)
 
@@ -32,9 +33,13 @@ class UpgradeSubscriptionView(APIView):
         profile = user.profiles
 
         # Fetch the selected subscription plan
-        subscription = Subscription.objects.get(plan='premium_monthly')
+        subscription = Subscription.objects.get(plan=new_plan.lower())
 
         # Update the user's subscription
+        if profile.subscription == subscription:
+            return Response({'message': 'Alreay on this subscription'},
+                            status=status.HTTP_200_OK)
+
         profile.subscription = subscription
         profile.save()
 
