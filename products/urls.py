@@ -9,6 +9,8 @@ urlpatterns = [
 
     path('deliveries/', views.DeliveryView.as_view(), name="deliveries"),
     path('deliveries/<int:pk>/', views.DeliveryView.as_view(), name="edit-delivery"),
+    path('delivery/<int:pk>/', views.DeliverySingleView.as_view(), name="view-delivery"),
+
 
 
 ]

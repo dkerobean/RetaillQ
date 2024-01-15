@@ -1,7 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from user.models import Products, Delivery
-from .serializers import ProductsSerializer, DeliverySerializer, DeliveryCreateSerializer
+from .serializers import (ProductsSerializer,
+                          DeliverySerializer, DeliveryCreateSerializer)
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
@@ -74,3 +75,23 @@ class DeliveryView(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        delivery = get_object_or_404(Delivery, id=pk, user=request.user)
+        delivery.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class DeliverySingleView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
+        try:
+            delivery = Delivery.objects.get(id=pk, user=request.user)
+            serializer = DeliveryCreateSerializer(delivery)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Delivery.DoesNotExist:
+            return Response(
+                {"error": f"Product with id {pk} not found."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
