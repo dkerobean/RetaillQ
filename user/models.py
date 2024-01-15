@@ -156,6 +156,22 @@ class Sale(models.Model):
         super(Sale, self).save(*args, **kwargs)
 
 
+class Delivery(models.Model):
+    STATUS_CHOICES = [
+        ('Pending', 'Pending'),
+        ('Cancelled', 'Cancelled'),
+        ('Completed', 'Completed'),
+    ]
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    location = models.CharField(max_length=100)
+    product = models.ForeignKey(Products, on_delete=models.CASCADE)
+    status = models.CharField(choices=STATUS_CHOICES,
+                              max_length=20, default='Pending')
+    quantity = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
 class Subscription(models.Model):
     PLAN_CHOICES = [
         ('free', 'Free'),
