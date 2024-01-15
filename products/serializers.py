@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from user.models import Products
+from user.models import Products, Delivery
 
 
 class ProductsSerializer(serializers.ModelSerializer):
@@ -11,3 +11,9 @@ class ProductsSerializer(serializers.ModelSerializer):
         model = Products
         fields = '__all__'
         extra_kwargs = {'product_id': {'write_only': True}}
+
+
+class DeliverySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Delivery
+        fields = '__all__'
