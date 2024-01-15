@@ -162,14 +162,21 @@ class Delivery(models.Model):
         ('Cancelled', 'Cancelled'),
         ('Completed', 'Completed'),
     ]
+
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     location = models.CharField(max_length=100)
     product = models.ForeignKey(Products, on_delete=models.CASCADE)
     status = models.CharField(choices=STATUS_CHOICES,
                               max_length=20, default='Pending')
     quantity = models.IntegerField()
+    total = models.IntegerField()
+    delivery_fee = models.IntegerField(null=True, blank=True)
+    contact_number = models.CharField(max_length=20)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user.name}'s Delivery ({self.status})"
 
 
 class Subscription(models.Model):

@@ -19,13 +19,19 @@ class ProductListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Products
-        fields = ['price', 'remaining_percentage', 'currency']
+        fields = ['name', 'price', 'remaining_percentage', 'currency']
 
 
 class DeliverySerializer(serializers.ModelSerializer):
 
     product = ProductListSerializer()
 
+    class Meta:
+        model = Delivery
+        fields = '__all__'
+
+
+class DeliveryCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Delivery
         fields = '__all__'
