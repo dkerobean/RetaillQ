@@ -23,15 +23,23 @@ class ProductListSerializer(serializers.ModelSerializer):
 
 
 class DeliverySerializer(serializers.ModelSerializer):
-
+    user_name = serializers.SerializerMethodField()
+    user_profile_image = serializers.SerializerMethodField()
     product = ProductListSerializer()
 
     class Meta:
         model = Delivery
         fields = '__all__'
 
+    def get_user_name(self, obj):
+        return obj.user.profiles.name if obj.user.profiles else ''
+
+    def get_user_profile_image(self, obj):
+        return obj.user.profiles.avatar.url if obj.user.profiles and obj.user.profiles.avatar else '' # noqa
+
 
 class DeliveryCreateSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Delivery
         fields = '__all__'
