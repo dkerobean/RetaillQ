@@ -179,6 +179,12 @@ class Delivery(models.Model):
         return f"{self.user.name}'s Delivery ({self.status})"
 
 
+class Pickup(models.Model):
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    pickup_location = models.CharField(max_length=150)
+    created_at = models.DateTimeField(auto_now=True)
+
+
 class Subscription(models.Model):
     PLAN_CHOICES = [
         ('free', 'Free'),
