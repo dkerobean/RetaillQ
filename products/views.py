@@ -26,7 +26,6 @@ class ProductsView(APIView):
     def put(self, request, pk):
         product = get_object_or_404(Products, id=pk, user=request.user)
 
-        # Ensure 'quantity' is in request.data before setting 'initial_quantity'
         quantity = request.data.get('quantity')
         if quantity is not None:
             product.initial_quantity = quantity

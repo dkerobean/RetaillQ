@@ -29,7 +29,7 @@ class SalesView(APIView):
 
             # Ensure that the quantity_sold is less than or equal to the available quantity # noqa
             quantity_sold = serializer.validated_data['quantity_sold']
-            if quantity_sold > product.quantity:
+            if quantity_sold > product.initial_quantity:
                 return Response({'error': 'Quantity sold exceeds available quantity.'}, # noqa
                                 status=status.HTTP_400_BAD_REQUEST)
 
