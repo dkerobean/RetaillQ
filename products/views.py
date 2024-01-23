@@ -25,8 +25,16 @@ class ProductsView(APIView):
 
     def put(self, request, pk):
         product = get_object_or_404(Products, id=pk, user=request.user)
+
+        # Ensure 'quantity' is in request.data before setting 'initial_quantity'
+        quantity = request.data.get('quantity')
+        if quantity is not None:
+            product.initial_quantity = quantity
+
+        # Exclude 'quantity' from serializer data
         serializer = ProductsSerializer(product, data=request.data)
         if serializer.is_valid():
+            serializer.validated_data.pop('quantity', None)
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

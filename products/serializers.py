@@ -13,13 +13,21 @@ class ProductsSerializer(serializers.ModelSerializer):
         extra_kwargs = {'product_id': {'write_only': True}}
 
 
+class ProductPutSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Products
+        fields = ['name', 'initial_quantity', 'user']
+        extra_kwargs = {'product_id': {'write_only': True}}
+
+
 class ProductListSerializer(serializers.ModelSerializer):
     currency = serializers.CharField(source='user.profiles.currency_symbol',
                                      read_only=True)
 
     class Meta:
         model = Products
-        fields = ['name', 'price', 'remaining_percentage', 'currency']
+        fields = ['name', 'price', 'remaining_percentage',
+                  'currency', 'initial_quantity']
 
 
 class DeliverySerializer(serializers.ModelSerializer):

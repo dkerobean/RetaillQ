@@ -82,6 +82,7 @@ class Products(models.Model):
     remaining_percentage = models.DecimalField(max_digits=5,
                                                decimal_places=2,
                                                default=100.00)
+    total_quantity_sold = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -146,8 +147,11 @@ class Sale(models.Model):
         # Deduct quantity_sold from the product quantity
         self.product.quantity -= self.quantity_sold
 
+        # Update total_quantity_sold
+        self.product.total_quantity_sold += self.quantity_sold
+
         # Calculate the remaining  percentage
-        remaining_percentage = (self.product.quantity / self.product.initial_quantity) * 100  # noqa
+        remaining_percentage = (self.product.total_quantity_sold / self.product.initial_quantity) * 100 # noqa
         self.product.remaining_percentage = remaining_percentage
 
         self.product.save()
