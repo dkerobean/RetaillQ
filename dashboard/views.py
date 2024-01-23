@@ -28,7 +28,7 @@ class IncomeExpenseView(APIView):
 
         # calculate total expense
         total_expense = Transaction.objects.filter(
-            user=user, transaction_type='income',
+            user=user, transaction_type='expense',
         ).aggregate(sum=Sum('amount'))['sum'] or 0
 
         total_expense += Expense.objects.filter(
@@ -255,6 +255,12 @@ class IncomeExpenseDashboardView(APIView):
                 transaction_date__month=month,
                 transaction_date__year=requested_year
             ).aggregate(expense=Sum('amount'))['expense'] or 0
+
+            expenses += Expense.objects.filter(
+                 user=request.user,
+                 created_at__month=month,
+                 created_at__year=requested_year
+                 ).aggregate(sum=Sum('amount'))['sum'] or 0
 
             # Calculate income vs expense
             income = income_transactions + completed_sales
