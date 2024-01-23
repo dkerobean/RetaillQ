@@ -151,7 +151,7 @@ class Sale(models.Model):
         self.product.total_quantity_sold += self.quantity_sold
 
         # Calculate the remaining  percentage
-        remaining_percentage = (self.product.total_quantity_sold / self.product.initial_quantity) * 100 # noqa
+        remaining_percentage = 100 - (self.product.total_quantity_sold / self.product.initial_quantity) * 100 # noqa
         self.product.remaining_percentage = remaining_percentage
 
         self.product.save()
