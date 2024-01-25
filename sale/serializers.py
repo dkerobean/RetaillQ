@@ -1,5 +1,11 @@
 from rest_framework import serializers
-from user.models import Sale, Expense, ExpenseCategory, Transaction
+from user.models import Sale, Expense, ExpenseCategory, Transaction, Products
+
+
+class ProductsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Products
+        fields = ['id', 'name']
 
 
 class SaleSerializer(serializers.ModelSerializer):
@@ -8,12 +14,13 @@ class SaleSerializer(serializers.ModelSerializer):
     user_name = serializers.SerializerMethodField()
     product_name = serializers.SerializerMethodField()
     user_profile_image = serializers.SerializerMethodField()
+    product = ProductsSerializer()
 
     class Meta:
         model = Sale
         fields = ['id', 'user', 'user_name', 'user_profile_image',
                   'product', 'product_name', 'quantity_sold', 'sale_date',
-                  'total', 'status', 'currency']
+                  'total', 'status', 'currency', 'product']
 
     def get_user_name(self, obj):
         print(obj)
