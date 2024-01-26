@@ -14,13 +14,12 @@ class SaleSerializer(serializers.ModelSerializer):
     user_name = serializers.SerializerMethodField()
     product_name = serializers.SerializerMethodField()
     user_profile_image = serializers.SerializerMethodField()
-    product = ProductsSerializer()
 
     class Meta:
         model = Sale
         fields = ['id', 'user', 'user_name', 'user_profile_image',
                   'product', 'product_name', 'quantity_sold', 'sale_date',
-                  'total', 'status', 'currency', 'product']
+                  'total', 'status', 'currency']
 
     def get_user_name(self, obj):
         print(obj)

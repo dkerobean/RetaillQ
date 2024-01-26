@@ -80,7 +80,7 @@ class Products(models.Model):
     initial_quantity = models.IntegerField(null=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     remaining_percentage = models.DecimalField(max_digits=5,
-                                               decimal_places=2,
+                                               decimal_places=0,
                                                default=100.00)
     total_quantity_sold = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -173,7 +173,8 @@ class Delivery(models.Model):
     status = models.CharField(choices=STATUS_CHOICES,
                               max_length=20, default='Pending')
     quantity = models.IntegerField()
-    total = models.IntegerField()
+    total = models.DecimalField(max_digits=10, decimal_places=2,
+                                null=True, blank=True)
     delivery_fee = models.IntegerField(null=True, blank=True)
     contact_number = models.CharField(max_length=20)
     created_at = models.DateTimeField(auto_now_add=True)
