@@ -35,7 +35,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             return user
 
 
-class TrasactionSerializer(serializers.ModelSerializer):
+class TransactionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Transaction

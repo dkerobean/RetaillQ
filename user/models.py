@@ -93,6 +93,9 @@ class Products(models.Model):
 
         super(Products, self).save(*args, **kwargs)
 
+    def __str__(self):
+        return self.name
+
 
 class ExpenseCategory(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)

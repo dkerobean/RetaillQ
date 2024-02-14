@@ -2,7 +2,7 @@
 from rest_framework import generics
 from rest_framework.response import Response
 from .serializers import (UserRegistrationSerializer,
-                          TrasactionSerializer, UserProfileSerializer)
+                          TransactionSerializer, UserProfileSerializer)
 from rest_framework import status
 from .models import Transaction
 from rest_framework.views import APIView
@@ -11,6 +11,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.conf import settings
 import jwt
+from django.shortcuts import get_object_or_404
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
@@ -96,7 +97,8 @@ class LogoutView(APIView):
             return Response({"detail": "Invalid refresh token."}, status=status.HTTP_400_BAD_REQUEST) # noqa
 
 
-class TransactionView(generics.ListAPIView):
-
-    queryset = Transaction.objects.all()
-    serializer_class = TrasactionSerializer
+class TransactionView(APIView):
+    def get(self, request, pk):
+        transaction = get_object_or_404(Transaction, id=pk, user=request.user)
+        serializer = TransactionSerializer(transaction)
+        return Response(serializer.data, status=status.HTTP_200_OK)
